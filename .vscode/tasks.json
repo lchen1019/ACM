@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "g++.exe build active file",
+      "command": "C:\\develop_environment\\mingw64\\bin\\g++.exe",
+      "args": [
+        "-g",
+        "-std=c++17",
+        "\"${file}\"",
+        "-include",
+        "${workspaceRoot}\\.vscode\\cppDebug.h",
+        "-o",
+        "\"${fileDirname}\\${fileBasenameNoExtension}.exe\""
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "run_pause",
+      "type": "shell",
+      "command": "cmd",
+      "dependsOn": "g++.exe build active file",
+      "args": [
+        "/C",
+        "START",
+        "C:\\develop_environment\\mingw64\\bin\\ConsolePauser.exe",
+        "\"${fileDirname}\\${fileBasenameNoExtension}.exe\""
+      ],
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    }
+  ],
+  "options": {
+    "shell": {
+      "executable": "${env:SystemRoot}\\System32\\cmd.exe",
+      "args": [
+        "/c"
+      ]
+    },
+    "env": {
+      "Path": "C:\\develop_environment\\mingw64\\bin:${env:Path}"
+    }
+  }
+}
