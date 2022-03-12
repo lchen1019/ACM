@@ -11,6 +11,7 @@ int gcd(int a, int b) {
 }
 
 int main() {
+    freopen("in.in","rw",stdin);
     scanf("%d",&t);
     while(t--) {
         scanf("%d",&n);
@@ -25,11 +26,10 @@ int main() {
         }
         for (int i = 2; i < n; i++) {
             int k = gcd(a[i], t);
-            printf("%d  %d  %d\n",a[i],t,k);
             t = t / k;
             if(t == 1){
                 printf("Yes\n");
-                continue;
+                break;
             }
         }
         if(t != 1)  printf("No\n");
