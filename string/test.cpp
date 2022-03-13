@@ -1,56 +1,86 @@
-#include<bits/stdc++.h>
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <queue>
 using namespace std;
-#define ll long long
-const int mod = 19930726;
-const int N = 1100000;
-char s[N],str[N*2];
-int p[N*2],cnt[N];
-int len,n;
-ll ans=1,k;
-ll ksm(int x,int y) {//因为数据范围很大容易爆掉，所以就要Fast_Pow
-    if(x==1) return 1;
-    ll res=1,base=x;
-    while(y) {
-        if(y&1) res=(res*base)%mod;
-        base=(base*base)%mod;
-        y>>=1;
+struct Tree  //字典树
+{
+    int fail;     //失配指针
+    int vis[26];  //子节点的位置
+    int end;      //标记有几个单词以这个节点结尾
+} AC[1000000];    // Trie树
+int cnt = 0;      // Trie的指针
+inline void Build(string s) {
+    int l = s.length();
+    int now = 0;                 //字典树的当前指针
+    for (int i = 0; i < l; ++i)  //构造Trie树
+    {
+        if (AC[now].vis[s[i] - 'a'] == 0)     // Trie树没有这个子节点
+            AC[now].vis[s[i] - 'a'] = ++cnt;  //构造出来
+        now = AC[now].vis[s[i] - 'a'];        //向下构造
     }
-    return res;
+    AC[now].end += 1;  //标记单词结尾
 }
-void manacher() {//Manacher模板，详见洛谷P3805
-    for(int i=1; i<=len; i++) str[i*2-1]='%',str[i*2]=s[i];
-    str[len=len*2+1]='%';
-    int id=0,mx=0;
-    for(int i=1; i<=len; i++) {
-        if(i<mx) p[i]=min(p[id*2-i],mx-i);
-        else p[i]=1;
-        while(p[i]+i<=len && i-p[i]>=1 && str[i+p[i]]==str[i-p[i]]) p[i]++;
-        if(p[i]+i>mx) id=i,mx=i+p[i];
-        if((p[i]-1)%2){
-			 cnt[p[i]-1]++;
-			printf("%d\n",p[i] - 1);
-		}
-    }
-}
-int main() {
-    int sum=0;
-    cin>>n>>k>>s+1;
-    len=n;
-    manacher();
-    for(int i=n; i>=1; --i) {//根据题意常规操作
-        if(i%2==0) continue;
-		printf("%d  %d\n",i,cnt[i]);
-        sum+=cnt[i];
-        if(k>=sum) {
-            ans=(ans*ksm(i,sum))%mod;
-            k-=sum;
-        } else {
-            ans=(ans*ksm(i,k))%mod;
-            k-=sum;
-            break;
+void Get_fail()  //构造fail指针
+{
+    queue<int> Q;                 //队列
+    for (int i = 0; i < 26; ++i)  //第二层的fail指针提前处理一下
+    {
+        if (AC[0].vis[i] != 0) {
+            AC[AC[0].vis[i]].fail = 0;  //指向根节点
+            Q.push(AC[0].vis[i]);       //压入队列
         }
     }
-    if(k>0) ans=-1;
-    cout<<ans;
+    while (!Q.empty())  // BFS求fail指针
+    {
+        int u = Q.front();
+        Q.pop();
+        for (int i = 0; i < 26; ++i)  //枚举所有子节点
+        {
+            if (AC[u].vis[i] != 0)  //存在这个子节点
+            {
+                AC[AC[u].vis[i]].fail = AC[AC[u].fail].vis[i];
+                //子节点的fail指针指向当前节点的
+                // fail指针所指向的节点的相同子节点
+                Q.push(AC[u].vis[i]);  //压入队列
+            } else                     //不存在这个子节点
+                AC[u].vis[i] = AC[AC[u].fail].vis[i];
+            //当前节点的这个子节点指向当
+            //前节点fail指针的这个子节点
+        }
+    }
+}
+int AC_Query(string s)  // AC自动机匹配
+{
+    int l = s.length();
+    int now = 0, ans = 0;
+    for (int i = 0; i < l; ++i) {
+        now = AC[now].vis[s[i] - 'a'];                           //向下一层
+        for (int t = now; t && AC[t].end != -1; t = AC[t].fail)  //循环求解
+        {
+            ans += AC[t].end;
+            AC[t].end = -1;
+        }
+    }
+    return ans;
+}
+int main() {
+    int n;
+    string s;
+    cin >> n;
+    for (int i = 1; i <= n; ++i) {
+        cin >> s;
+        Build(s);
+    }
+    AC[0].fail = 0;  //结束标志
+    Get_fail();      //求出失配指针
+    for (int i = 0; i <= cnt; i++) {
+        printf("pos = %d, last = %d,fail = %d\n", i, AC[i].end, AC[i].fail);
+    }
+    cin >> s;  //文本串
+    cout << AC_Query(s) << endl;
     return 0;
 }

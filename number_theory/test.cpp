@@ -1,18 +1,17 @@
 #include<cstdio>
-#include<map>
+#include<algorithm>
 using namespace std;
+typedef long long ll;
 
 int main() {
-    map<int,int> p;
-    p[1] = 1;
-    p[2] = 2;
-    printf("%d",p[3]);
-    printf("%d",p[4]);
-    printf("%d",p[5]);
-    printf("%d",p[6]);
-    printf("%d",p[7]);
-    printf("%d\n",p.size());
-    printf("%d\n",p.find(8));
-    printf("%d\n",p.size());
-    
+    ll n,k;
+    scanf("%lld%lld",&n,&k);
+    ll ans=n*k;
+    for(ll l=1,r;l<=n;l=r+1) {
+        if(k/l!=0) r=min(k/(k/l),n); 
+        else r=n;
+        ans-=(k/l)*(r-l+1)*(l+r)/2;
+    }
+    printf("%lld",ans);
+    return 0;
 }
