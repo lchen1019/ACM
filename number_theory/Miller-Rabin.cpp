@@ -3,15 +3,16 @@
 #include <ctime>
 #include <iostream>
 #include <utility>
+#include <cstdlib>
 using namespace std;
 typedef unsigned long long ull;
 
-const int k = 100;  // 安全参数
+const int k = 10;  // 安全参数
 
 
 // 随机数发生器
 ull great_random() {
-    ull ans = rand() * rand() * (rand() % 13) + rand() * (rand() % 11);
+    ull ans = (ull)rand() * (ull)rand() * rand() * rand() + (ull)rand() * (rand() % 11);
     return ans;
 }
 
@@ -38,19 +39,20 @@ ull fast_pow(ull a, ull b, ull mod) {
 
 int main() {
     srand(time(0));
+    int pos = 0;
     while(true) {
         ull n = great_random(); // 生成待检验的大素数
-        if (n % 2 == 0) continue;
-        printf("产生的打随机数为: %llu\n", n);
+        if (n % 2 == 0 || n < 10000000000000002) continue;
+        // printf("产生的打随机数为: %llu\n", n);
         bool is = true;
         // 分解n - 1
         pair<ull, ull> b = break_down(n - 1);
         ull s = b.first, t = b.second;
-        printf("s = %llu,t = %llu\n", s, t);
+        // printf("s = %llu,t = %llu\n", s, t);
         // k次Fermat检验
         int time = 0;
         while(time < k) {
-            ull m = rand() % n;
+            ull m = (ull)rand() % n;
             if (m < 2 || m == n - 1)    continue;
             // printf("第%d次检验数据为%llu\n",time+1, m);
             bool satisfy = false;
@@ -79,6 +81,7 @@ int main() {
         }
         if (is) {
             printf("************%llu***************\n",n);
+            // printf("%llu\n",n);
         }
         // break;
     }
