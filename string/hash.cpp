@@ -10,10 +10,10 @@ struct Node {
     ull hash1, hash2;
 }node [N];
 
-const ull mod1 = 1844674407370955615;
-const ull mod2 = 1000000000000002493;
-const ull base1 = 9923335656754;
-const ull base2 = 112376756745;
+const ull mod1 = 180143985094819841;
+const ull mod2 = 31525197391593473;
+const ull base1 = 998244353;
+const ull base2 = 469762049;
 
 inline ull calc(const char *p, ull mod, ull base) {
     ull ans = 0;
