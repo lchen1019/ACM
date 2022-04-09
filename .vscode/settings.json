@@ -33,6 +33,7 @@
     "unordered_set": "cpp",
     "initializer_list": "cpp",
     "stack": "cpp",
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "type_traits": "cpp"
   }
 }

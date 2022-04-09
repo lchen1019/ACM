@@ -30,6 +30,10 @@ void init() {
         prefix[i] = prefix[i - 1];
     }
     prefix[0] = -1;
+    for(int i = 0; i <= len_p; i++) {
+        printf("%-3d", prefix[i]);
+    }
+    printf("\n");
 }
 
 // 匹配方法

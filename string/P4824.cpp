@@ -4,52 +4,41 @@
 using namespace std;
 #define N 1000005
 
+int lt, lp;
 char t[N], p[N];
+char ans[N];
+int head, tail = -1;
+stack<int> pre;
 int nxt[N];
 
+// 初始化next数组
 void init() {
-    int i = 1, len = 0;
-    while(p[i]) {
-        if (p[len] == p[i]) {
-            nxt[i++] = ++len;
-        } else {
-            if (len > 0) {
-                len = nxt[len - 1];
-            } else {
-                nxt[i++] = 0;
-            }
-        }
-    }
-    for (int j = i; j >= 1; j--) {
-        nxt[j] = nxt[j - 1];
-    }
-    nxt[0] = -1;
-}
-
-void KMP() {
-    int pos_t = 0, pos_p = 0;
-    int len_t = strlen(t), len_p = strlen(p);
-    stack<char> ans;
-    while(pos_t < len_t) {
-        ans.push(t[pos_t]);
-        // 匹配成功
-        if (pos_p == len_p - 1 && ans.top() == p[pos_p]) {
-            ans.pop();
-            pos_p = nxt[pos_p];
-            if (pos_p == -1)    ++pos_p, ++pos_t;
-        }
-        if (t[pos_t] == p[pos_p]) {
-            ++pos_p, ++pos_t;
-        } else {
-            pos_p = nxt[pos_p];
-            if (pos_p == -1)    ++pos_p, ++pos_t;
-        }
+    int len = 0;
+    for (int i = 2; i <= lp; i++) {
+        while (len && p[len + 1] != p[i]) len = nxt[len];
+        if (p[len + 1] == p[i])   len++;
+        nxt[i] = len;
     }
 }
 
 int main() {
-    scanf("%s%s",t,p);
+    scanf("%s", t + 1);
+    scanf("%s", p + 1);
+    lt = strlen(t + 1);
+    lp = strlen(p + 1);
     init();
-    // 匹配
-
+    // 遍历文本串
+    int len = 0;
+    for (int i = 1;i <= lt; i++) {
+        while(len && p[len + 1] != t[i])    len = nxt[len];
+        if (p[len + 1] == t[i]) ++len;
+        if (len == lp) {
+            len = nxt[len];
+            printf("%d\n", i - lp + 1);
+        }
+    }
+    for (int i = head; i <= tail; i++) {
+        printf("%c", ans[i]);
+    }
+    printf("\n");
 }
