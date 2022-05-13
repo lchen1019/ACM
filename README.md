@@ -47,3 +47,8 @@
 		I + O + S + T + R + E + A + M = 9 + 15 + 19 + 20 + 18 + 5 + 1 + 13 = 100% ，
 
 所以 ，坚持写代码吧 !
+
+## 为什么要学算法？
+
+![image.png](https://s2.loli.net/2022/05/13/gOG2n7YJsmU5hfq.png)
+![image.png](https://s2.loli.net/2022/05/13/kWSN1yxCHcKwe4n.png)
